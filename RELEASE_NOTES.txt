@@ -1,0 +1,59 @@
+???
+
+Map still displays checkpoints after game is over
+
+
+1.0: SurviveDC 2012
+
+* sign up for survivedc
+* see the map
+* see the rules
+* check in at a location
+* check your position
+* see twitter feed
+* redirect non-logged-in-users to main page
+* sign in/sign up/homebuttons
+* email user their new temporary password (set it in controller?)
+* "home" buttons on sub-pages
+* seed checkpoints
+* reset password link on login page
+* users can reset their password
+* users can authenticate their email
+* users can log in with their password
+* make sure can't create two users with same email or username
+* visible error messages on failed login
+* after checkin, redirect to status
+* enable dreamhost cloudflare speedup
+* status time in Eastern time
+* add rules
+* buttons should be CSS, not images (and nice widths as percentage of screen)
+* get location on access + store in DB (location_updates)
+* redirect app mail to me
+* capitalize code when sending down; downcase when comparing in database
+* when viewing map, refresh (and log) location every 5 minutes
+* map automatically follows location when it changes
+* check location when checking in; try to auto-find checkpoint
+* round display of distance to nearest 0.1 when showing skeptical face
+* ask for manual entry if more than 0.15 miles away
+* play with location and see if 0.15 miles seems right (and if distance is correct)
+* fix formatting on auto-checkin
+* record lat, long, accuracy on checkins
+* convert button auto-checkin to form/post (and make it look right)
+* allow team names in signup
+* let users know their username will be public
+* increase font size (for twitter/rules/check in)
+* figure out why width is limited on rules
+* allow friending
+ - on status page, form to request a friend
+ - when friend requested, check to see if this user has verified their email address; if so, create request; otherwise, direct to notice page
+ - when friend requested, send email to target friend with code to approve
+ - when friend approved, display notice and link to request that they friend you back
+ - when on status page, display approved friends' num_checkpoints and most recent checkin location
+ - when on map page, display friends' locations (on click, see name and last update time)...maybe just 10 most recent updates total?
+* better landing page for non-member invite recipients?
+* indicate whether checkin was automatic or manual
+* log out button lower down (at bottom of screen, maybe?
+* change map_on and game_on back
+* change last checkin range in map_controller to be MINUTES instead of DAYS
+* set map_on and game_on to expire around 4AM (so as not to keep providing location updates ;)
+* name checkpoint examples better (give full list, including Finish; also change map icons to say in words)

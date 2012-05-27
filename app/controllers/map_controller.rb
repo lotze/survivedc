@@ -21,7 +21,9 @@ class MapController < ApplicationController
       var surviveDCLayer = new google.maps.KmlLayer("http://www.google.com/maps/ms?authuser=0&vps=3&ie=UTF8&msa=0&output=kml&msid=217892725029110178762.0004bdcec3bc0e0f8c64a");
       surviveDCLayer.setMap(map);
       MAP
-      
+    end
+    
+    if game_on
       @friend_locations = {}
       friend_updates = LocationUpdate.find_by_sql ['select location_updates.* from location_updates join friend_requests on friend_requests.target_id=location_updates.user_id where friend_requests.approved=1 and friend_requests.requesting_id = ? and location_updates.created_at > NOW() - INTERVAL 30 MINUTE order by location_updates.created_at desc', current_user.id]
       friend_updates.each do |f|

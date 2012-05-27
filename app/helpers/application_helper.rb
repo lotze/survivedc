@@ -15,11 +15,21 @@ module ApplicationHelper
   def time_bw_loc_updates
     if game_on
       return 60
-    elsif map_on
+    elsif pre_game
       return 300
     else
       return 3600
     end
+  end
+  
+  def pre_game 
+    t = Time.now
+    t >= release_time - 7200 && t <= release_time 
+  end
+  
+  def post_game
+    t = Time.now
+    t >= over_time
   end
   
   def game_on
@@ -29,7 +39,7 @@ module ApplicationHelper
   
   def map_on
     t = Time.now
-    t >= map_open_time && t <= over_time 
+    t >= map_open_time
   end
   
   def random_code(length=5)
