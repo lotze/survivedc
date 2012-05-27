@@ -1,0 +1,5 @@
+= SurviveDC
+
+Note that you will need to create your own config/application.rb, config/database.yml, and config/deploy.rb (if you want to deploy using Capistrano).  There are sample files for these for you to use.
+
+This work is copyright Thomas Lotze, licensed under a Creative Commons Attribution/Share Alike license (https://creativecommons.org/licenses/by-sa/3.0/).

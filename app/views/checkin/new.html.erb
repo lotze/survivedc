@@ -1,0 +1,132 @@
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+
+<% if @bad_code %>
+<div class="readable_text error"><%= @bad_code %> is not a valid checkpoint code.</div>
+<% end %>
+
+<div id="auto_checkin" class="invisible">
+<p id='auto_text' class="readable_text"></p>
+<%= form_tag({:controller => :checkin, :action => :create}, :id => :auto_checkin_form, :method => :post) do %>
+  <%= hidden_field_tag :method, 'automatic' %>
+  <%= submit_tag("Check In To Checkpoint", :id => :auto_submit, :class => 'my_button shorter_button wide_button') %>
+<% end %>
+<p id='auto_post_text' class="readable_text"></p>
+</div>
+
+<div id="notices" class="readable_text">
+Loading your location to find the right checkpoint...
+<img src="/images/loading.gif" alt="loading_image" />
+</div>
+
+<div id="manual_checkin" class="invisible">
+<p>
+<%= form_tag({:controller => :checkin, :action => :create}, :id => :manual_checkin_form, :method => :post) do %>
+  <div class="field">
+    <%= text_field_tag :code %>
+  </div>
+  <%= hidden_field_tag :method, 'manual' %>
+  <div class="actions"><%= submit_tag("Submit", :class => 'enter') %></div>
+<% end %>
+</p>
+
+<p>If you need help, ask a staff member.</p>
+</div>
+
+</div>
+<script type="text/javascript">
+<% if game_on %>
+  function displayManualCheckin() {
+  	$("#manual_checkin").removeClass("invisible");
+  }
+  function displayAutoCheckin(code,latitude,longitude,accuracy) {
+	$("#auto_text").html("You seem to be at checkpoint " + code + ". If so, click the button to check in! If that's NOT right, don't hit the button!");
+			    $("#auto_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'code')
+		            .val(code)
+		        );
+			    $("#auto_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'long')
+		            .val(longitude)
+		        );
+			    $("#auto_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'lat')
+		            .val(latitude)
+		        );
+			    $("#auto_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'accuracy')
+		            .val(accuracy)
+		        );
+	
+	$("#auto_submit").attr('value', "Check In to " + code);
+
+	$("#auto_post_text").html("You can enter the correct checkpoint name (Mu, Phi, Gamma, etc.) below to check in manually.</p>");
+  	$("#auto_checkin").removeClass("invisible");
+  }
+      var checkpoint_data = <%= @checkpoint_data.to_json.html_safe %>;
+      var ts = new Date().getTime()/1000;
+      var longitude = null;
+      var latitude = null;
+      var accuracy = null;
+      if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(pos) {
+		        latitude = pos.coords.latitude;
+		        longitude = pos.coords.longitude;
+		        accuracy = pos.coords.accuracy;
+		        var xmlhttp=new XMLHttpRequest();
+		        xmlhttp.open("GET","<%= location_path %>?long=" + longitude + "&lat=" + latitude + "&acc=" + accuracy,true);
+				xmlhttp.send();
+		        setCookie("posTime", ts, 1);
+		        
+		        var min_dist = null;
+		        var closest_checkpoint_code = null;
+		        for(var i=0; i<checkpoint_data.length; i++) {
+			        var cur_dist = distance(checkpoint_data[i][1], checkpoint_data[i][2], latitude, longitude);
+			        if (min_dist == null || min_dist > cur_dist) {
+			          min_dist = cur_dist;
+			          closest_checkpoint_code = checkpoint_data[i][0];
+			        }
+			    }
+			    
+			    $("#manual_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'long')
+		            .val(longitude)
+		        );
+			    $("#manual_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'lat')
+		            .val(latitude)
+		        );
+			    $("#manual_checkin_form").append($('<input/>')
+		            .attr('type', 'hidden')
+		            .attr('name', 'accuracy')
+		            .val(accuracy)
+		        );
+			    
+			    if (min_dist < 0.15) {
+			      $("#notices").html("");
+			      displayAutoCheckin(closest_checkpoint_code, latitude, longitude, accuracy);
+			      displayManualCheckin();
+			    } else {
+				  $("#notices").html("<p>Um...your current location doesn't seem to be near any checkpoints (the closest one is " + Math.round(min_dist*100.0)/100.0 + " miles away). But if you <em>are</em> at a checkpoint, you can manually enter the checkpoint name (chi, lambda, mu, omega, psi, sigma, or finish) below to check in.</p>");
+				  displayManualCheckin();
+			    }
+			    
+			}, function(error) {
+				$("#notices").html("<p>There was an error getting your location; we don't know where you are. But if you are at a checkpoint, you can manually enter the checkpoint name (chi, lambda, mu, omega, psi, sigma, or finish) below to check in.</p>");
+				displayManualCheckin();
+			}, {enableHighAccuracy:true, maximumAge:30000});
+	  } else {
+		$("#notices").html("<p>We can't get your location, so we don't know where you are. But if you are at a checkpoint, you can manually enter the checkpoint name (chi, lambda, mu, omega, psi, sigma, or finish) below to check in.</p>");
+		displayManualCheckin();
+	  }
+<% else %>
+	$("#notices").html("<p>The game hasn't started yet -- but during the game, you can come here to check in whenever you make it to a checkpoint. This will record your time/progress for viewing afterwards and comparing with other runners.</p>");
+<% end %>
+</script>

@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  checkpoint_num: 1
+  num_people: 1
+
+two:
+  checkpoint_num: 1
+  num_people: 1

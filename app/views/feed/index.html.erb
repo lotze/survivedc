@@ -1,0 +1,36 @@
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+
+<div class="twitter_feed">
+<script charset="utf-8" src="/javascripts/twitter.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: 'survivedc',
+  interval: 5000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 1500,
+  theme: {
+    shell: {
+      background: '#000000',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#000000',
+      color: '#ffffff',
+      links: '#1985b5'
+    }
+  },
+  features: {
+    scrollbar: true,
+    loop: true,
+    live: true,
+    behavior: 'default'
+  }
+}).render().start();
+</script>
+</div>

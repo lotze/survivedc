@@ -1,0 +1,90 @@
+<% content_for :head do %>
+      <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=<%= Configurator::Application.config.google_maps_key %>&sensor=false"></script>
+      <script type="text/javascript">
+        var map;
+        var dupont = new google.maps.LatLng(38.909669, -77.043214);
+        
+        function initialize() {
+          var myOptions = {
+            zoom: 14,
+            center: new google.maps.LatLng(38.907665,-77.0333),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+			var myloc = new google.maps.Marker({
+			    clickable: false,
+			    icon: new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+			                                                    new google.maps.Size(22,22),
+			                                                    new google.maps.Point(0,18),
+			                                                    new google.maps.Point(11,11)),
+			    shadow: null,
+			    zIndex: 999,
+			    map: map
+			});
+			<%= @map_load.html_safe %>
+
+		    <% @friend_locations.each do |f| %>
+		      var loc_<%= f.user_id %> = new google.maps.Marker({
+	              icon: new google.maps.MarkerImage('//labs.google.com/ridefinder/images/mm_20_purple.png',
+                                                              new google.maps.Size(12,20)),
+		  	      clickable: true,
+	              shadow: null,
+	              zIndex: 999,
+	              map: map
+	          });
+	            loc_<%= f.user_id %>.setPosition(new google.maps.LatLng(<%= f.latitude %>, <%= f.longitude %>));
+			    var infowindow_<%= f.user_id %> = new google.maps.InfoWindow({content:"<%= f.user.public_name %>: updated at <%= f.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %>"});
+			    google.maps.event.addListener(loc_<%= f.user_id %>, 'click', function() {
+			      infowindow_<%= f.user_id %>.open(map,loc_<%= f.user_id %>);
+			    });
+		    <% end %>
+	
+			if (navigator.geolocation) {
+			  navigator.geolocation.getCurrentPosition(function(pos) {
+			    var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+			    myloc.setPosition(me);
+			    <% if map_on %>
+			    map.setCenter(me);
+			    map.setZoom(16);
+			    
+		        var latitude = pos.coords.latitude;
+		        var longitude = pos.coords.longitude;
+		        var accuracy = pos.coords.accuracy;
+			    var posTime = getCookie("posTime");
+			    var ts = new Date().getTime()/1000;
+			    if (!posTime || parseFloat(posTime) + <%= time_bw_loc_updates %> < ts) {
+			        var xmlhttp=new XMLHttpRequest();
+			        xmlhttp.open("GET","<%= location_path %>?long=" + longitude + "&lat=" + latitude + "&acc=" + accuracy,true);
+					xmlhttp.send();
+			        setCookie("posTime", ts, 1);
+			    }
+			    <% end %>
+			  }, function(error) {
+			    // ...
+			    // alert("Error getting location: " + error);
+			  }, {enableHighAccuracy:true, maximumAge:30000});
+			  navigator.geolocation.watchPosition(function(pos) {  
+  				var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+			    myloc.setPosition(me);
+			    
+			    var posTime = getCookie("posTime");
+			    var ts = new Date().getTime()/1000;
+			    if (!posTime || parseFloat(posTime) + <%= time_bw_loc_updates %> < ts) {
+			        var xmlhttp=new XMLHttpRequest();
+			        xmlhttp.open("GET","<%= location_path %>?long=" + pos.coords.longitude + "&lat=" + pos.coords.latitude + "&acc=" + pos.coords.accuracy,true);
+					xmlhttp.send();
+			        setCookie("posTime", ts, 1);
+			    }
+              });
+			}
+        }
+  
+        google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+<% end %>
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+<div id="map_canvas"></div>
+

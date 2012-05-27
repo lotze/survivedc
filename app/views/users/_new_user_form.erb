@@ -1,0 +1,36 @@
+<%= form_for @user do |f| %>
+  <% if @user.errors.any? %>
+    <div class="error">
+      <ul>
+        <% for message in @user.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label 'Email (private)' %>
+    <br /><%= f.email_field :email %>
+  </div>
+  <br />
+  <div class="field">
+    <%= f.label 'Username (public)' %>
+    <br /><%= f.text_field :username %>
+  </div>
+  <br />
+  <div class="field">
+    <%= f.label 'Team (public, optional)' %>
+    <br /><%= f.text_field :team %>
+  </div>
+  <% if @redirect_here %>
+  <%= f.hidden_field(:redirect_here, :value => @redirect_here) %>
+  <% end %>
+  <%= f.hidden_field(:password, :value => @random_password) %>
+  <%= f.hidden_field(:password, :value => @random_password) %>
+  <%= f.hidden_field(:password_confirmation, :value => @random_password) %>
+  <br />
+  <div class="actions"><%= f.submit :class => 'enter' %></div>
+<% end %>
+
+<p>You should allow survivedc.org to access your location.
+<br />This will let you check in using the app and share your location with friends during the game. You will also be able to view your location history after the game and see your route.</p>

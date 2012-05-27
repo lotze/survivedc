@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  requesting_id: 1
+  target_id: 1
+  approved: false
+  code: MyString
+
+two:
+  requesting_id: 1
+  target_id: 1
+  approved: false
+  code: MyString

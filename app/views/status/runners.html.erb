@@ -1,0 +1,11 @@
+<p class="readable_text">
+ <%= @total_runners %> total app registrations.
+</p>
+
+<p><ul>
+<% @per_checkpoint_runners.each do |r| %>
+
+<li class="readable_text">Made it to <%= r[0] %> checkpoints: <%= r[2] %> runners, most recent at  <%= r[1] ? r[1].in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") : 'n/a' %></li>
+
+<% end %>
+</ul></p>

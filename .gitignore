@@ -1,0 +1,6 @@
+.bundle
+log/*.log
+tmp/
+config/application.rb
+config/database.yml
+config/deploy.rb

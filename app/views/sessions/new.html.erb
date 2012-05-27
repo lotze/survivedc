@@ -1,0 +1,18 @@
+  <% if @error_notice %>
+    <div class="error">
+      <%= @error_notice %>
+    </div>
+  <% end %>
+
+<%= form_tag sessions_path do %>
+  <div class="field">
+    <%= label_tag :email %>
+    <br /><%= email_field_tag :email, params[:email] %>
+  </div>
+  <div class="field">
+    <%= label_tag :password %>
+    <br /><%= password_field_tag :password %>
+  </div>
+  <br /><div class="actions"><%= submit_tag "Log in", :class => 'enter' %></div>
+<% end %>
+<p><%= link_to 'Forgot Password?', new_password_reset_path %></p>

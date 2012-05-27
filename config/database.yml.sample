@@ -1,0 +1,27 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  host: localhost
+  database: survivedc
+  username: root
+  password: password
+  pool: 5
+  timeout: 5000
+
+test:
+  adapter: mysql2
+  database: survivedc_test
+  username: root
+  password: password
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  host: MY_MYSQL_HOST
+  database: survivedc
+  username: MY_USER
+  password: MY_PASSWORD
+  pool: 5
+  timeout: 5000

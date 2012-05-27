@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  tagger_id: 1
+  taggee_id: 1
+  latitude: 1.5
+  longitude: 1.5
+  street_address: MyString
+  user_agent: MyString
+  ip_address: MyString
+  device_id: MyString
+
+two:
+  tagger_id: 1
+  taggee_id: 1
+  latitude: 1.5
+  longitude: 1.5
+  street_address: MyString
+  user_agent: MyString
+  ip_address: MyString
+  device_id: MyString

@@ -1,0 +1,20 @@
+<% if current_user %>
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+<p class="readable_text">
+Approved! <%= @friend_request.requester.public_name %> will now see your status on their status and map pages!
+</p>
+<p class="readable_text">Want to see their status and location?  You'll need to send them a request to share.</p>
+<%= form_tag friend_request_path, :method => :get do %>
+  <div class="field">
+    <%= hidden_field_tag :email, @friend_request.requester.email %>
+    <%= submit_tag "Send", :class => 'enter' %>
+  </div>
+<% end %>
+<% else %>
+<%= render :partial => 'users/new_user_form', :locals => { :redirect_here => @redirect_here } %>
+<p class="readable_text">
+If you already have an account, you should <a href='<%= login_path %>'>log in</a> to approve this friendshp request.
+</p>
+<% end %>

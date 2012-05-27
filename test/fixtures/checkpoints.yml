@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  longitude: 1.5
+  latitude: 1.5
+  name: MyString
+  is_mobile: false
+  is_bonus: false
+  is_finish: false
+  num_players: 1
+
+two:
+  longitude: 1.5
+  latitude: 1.5
+  name: MyString
+  is_mobile: false
+  is_bonus: false
+  is_finish: false
+  num_players: 1

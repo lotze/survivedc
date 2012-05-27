@@ -1,0 +1,29 @@
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+
+<p class="readable_text">You are in <%= @place.ordinalize %> place among runners.</p>
+
+<p class="readable_text">You have checked in to <%= @user.checkpoint_num %> checkpoints:<ul>
+<% @user.checkins.includes(:checkpoint).each do |c| %>
+<li><%= c.checkpoint.name %> at <%= c.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %>
+<% end %>
+</ul></p>
+
+<% @friends.each do |f| %>
+<p class="readable_text">Your friend <%= f.public_name %> has checked in to <%= f.checkpoint_num %> checkpoints:<ul>
+<% f.checkins.each do |c| %>
+<li><%= c.checkpoint_num.ordinalize %> at <%= c.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %>
+<% end %>
+</ul></p>
+<% end %>
+
+<p class="readable_text">Want to see other runners' checkins here, and see their position on your map?  Request them as a friend:
+<br />
+<%= form_tag friend_request_path, :method => :get do %>
+  <div class="field">
+    <%= label_tag :email %>
+    <br /><%= email_field_tag :email %> 
+    <br /><%= submit_tag "Send", :class => 'enter' %>
+  </div>
+<% end %>

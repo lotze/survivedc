@@ -1,0 +1,19 @@
+<%= form_tag status_path, :method => :get do %>
+<%= submit_tag "Status", :class => "my_button left_button shorter_button" %>
+<% end %>
+
+<%= form_tag map_path, :method => :get do %>
+<%= submit_tag "Map", :class => "my_button right_button shorter_button" %>
+<% end %>
+
+<%= form_tag rules_path, :method => :get do %>
+<%= submit_tag "Rules", :class => "my_button left_button shorter_button" %>
+<% end %>
+
+<%= form_tag feed_path, :method => :get do %>
+<%= submit_tag "Feed", :class => "my_button right_button shorter_button" %>
+<% end %>
+
+<%= form_tag manual_checkin_path, :method => :get do %>
+<%= submit_tag "Check In", :class => "my_button center_button shorter_button" %>
+<% end %>

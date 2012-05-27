@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  user_id: 1
+  latitude: 1.5
+  longitude: 1.5
+  is_chaser: false
+
+two:
+  user_id: 1
+  latitude: 1.5
+  longitude: 1.5
+  is_chaser: false

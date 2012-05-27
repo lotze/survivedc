@@ -1,0 +1,9 @@
+<p>
+<table>
+<% @checkpoints.each do |c| %>
+
+<tr class="readable_text"><td><strong><%= c.name %></strong><br />(at <%= c.street_address %>)</td><td><%= c.num_players %> checked in, </td><td>latest at <%= c.updated_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %></td></tr>
+
+<% end %>
+</table>
+</p>
