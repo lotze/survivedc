@@ -6,7 +6,7 @@ set :use_sudo, false
 set :user, "MY_USER"
 
 set :application, "MY_DEPLOY_SITE"
-set :repository,  "git@github.com:lotze/survivedc.git"
+set :repository,  "git://github.com/lotze/survivedc.git"
 set :scm, :git
 set :branch, 'master'
 set :git_shallow_clone, 1
@@ -28,6 +28,12 @@ namespace(:customs) do
     run "ln -fs #{shared_path}/system/photos #{release_path}/public/images/photos"
   end
   
+  task :config, :roles => :app do
+    # upload configuration files
+    upload "config/application.rb", "#{release_path}/config/application.rb"
+    upload "config/database.yml", "#{release_path}/config/database.yml"
+  end
+  
   task :migrate, :roles => :app do
     # Run new migrations, if any
     run "cd #{release_path} && date >> log/migrations.log"
@@ -44,5 +50,6 @@ namespace :deploy do
 end
 
 after "deploy:symlink","customs:symlink"
+after "deploy:update_code","customs:config"
 before "deploy:restart","customs:migrate" 
 after "deploy", "deploy:cleanup"
