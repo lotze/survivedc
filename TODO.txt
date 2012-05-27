@@ -7,6 +7,12 @@ post-game displays:
 email unsubscribe ability
 note when emails fail; do some autocorrection of email, but otherwise don't send to them again
 
+fix near-gmail addresses
+remove bounces
+make survey
+
+send email: survey, link to see your route, link to unsubscribe
+
 Allow For Multiple Games:
 - change checkpoints, checkins to refer to specific games
 - have a games model which contains start time, end time, link to google map KML

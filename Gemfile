@@ -10,6 +10,7 @@ gem 'json'
 gem 'mime'
 gem 'nokogiri'
 gem 'rack', '=1.2.1'
+gem 'levenshtein'
 
 # Use unicorn as the web server
 # gem 'unicorn'
