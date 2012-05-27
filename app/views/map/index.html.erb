@@ -44,9 +44,10 @@
 			  navigator.geolocation.getCurrentPosition(function(pos) {
 			    var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 			    myloc.setPosition(me);
-			    <% if map_on %>
+			    <% if game_on || pre_game %>
 			    map.setCenter(me);
 			    map.setZoom(16);
+			    <% end %>
 			    
 		        var latitude = pos.coords.latitude;
 		        var longitude = pos.coords.longitude;
@@ -59,7 +60,6 @@
 					xmlhttp.send();
 			        setCookie("posTime", ts, 1);
 			    }
-			    <% end %>
 			  }, function(error) {
 			    // ...
 			    // alert("Error getting location: " + error);
