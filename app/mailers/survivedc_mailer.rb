@@ -55,8 +55,8 @@ You've registered for the SurviveDC app!  By registering, you'll be able to trac
       doc.css('br').each { |node| node.replace("\n") }
       text_body = doc.css('body').text.split("\n").collect { |line| line.strip }.join("\n")
            
-      gmail_login=Configurator::Application.config.gmail_login
-      gmail_password=Configurator::Application.config.gmail_password
+      gmail_login=SurviveDc::Application.config.gmail_login
+      gmail_password=SurviveDc::Application.config.gmail_password
      
       together_body = <<-BODY
 From: 'Survive DC' <#{gmail_login}>
