@@ -2,23 +2,26 @@ post-game displays:
 * see your route
 * see your friends' routes
 * leaderboard/compare your time
-
+* downloadable KML file of your night
 
 email unsubscribe ability
 note when emails fail; do some autocorrection of email, but otherwise don't send to them again
 
-small tags: users/new, sessions/new, users/status (and manual checkpoint if we re-add); convert to greyed words in box
+Allow For Multiple Games:
+- change checkpoints, checkins to refer to specific games
+- have a games model which contains start time, end time, link to google map KML
+- allow users to view results from all their past games
 
-timeout on getting location for checkin (firefox hang boo)
-increase map icon/text size
+fix small tags in forms: users/new, sessions/new, users/status (and manual checkpoint if we re-add); convert to greyed words in box
+
+set timeout on getting location for checkin (avoid any hangs)
+increase icon/text size on map
 
 convert errors into notice controller redirects
 
 display GPF location(s) on map (click to see when updated)
 
-better font sizing -- get/store screen width in cookie, use to modify font size?
 detect when users refuse location access and try to convince them
-status views for admins: checkpoints, runners, chasers
 more interesting ("there's a chaser nearby!") 404/error pages
 
 allow tag/tagged
