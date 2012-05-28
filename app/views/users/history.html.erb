@@ -1,0 +1,78 @@
+<% content_for :head do %>
+
+      <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=<%= SurviveDc::Application.config.google_maps_key %>&sensor=false"></script>
+	  <%= javascript_include_tag "BDCCArrowedPolyline.js" %>
+      <script type="text/javascript">
+        var map;
+        var dupont = new google.maps.LatLng(38.909669, -77.043214);
+        
+        function initialize() {
+          var myOptions = {
+            zoom: 14,
+            center: dupont,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+
+		<% if map_on %>
+			
+			var surviveDCLayer = new google.maps.KmlLayer("http://www.google.com/maps/ms?authuser=0&vps=3&ie=UTF8&msa=0&output=kml&msid=217892725029110178762.0004bdcec3bc0e0f8c64a");
+      		surviveDCLayer.setMap(map);
+
+      		var waypoints = [ <%= @places.map {|p| "new google.maps.LatLng(#{p[1]},#{p[2]})"}.join(",") %> ];
+      		var routePath = new google.maps.Polyline({
+			  path: waypoints,
+			  strokeColor: "#0000CC",
+			  strokeOpacity: 0.7,
+			  strokeWeight: 2
+			});
+			routePath.setMap(map);
+			//var arrowLine = new BDCCArrowedPolyline(waypoints, "#0000CC", 2, 0.7, null, 1, 1, "#0000CC", 2, 0.7)
+			//arrowLine.setMap(map);
+      		
+      		<% @location_updates.each do |loc| %>
+		      var loc_<%= loc.id %> = new google.maps.Marker({
+	              icon: new google.maps.MarkerImage('/images/icons/runner.png',
+                                                              new google.maps.Size(32,37)),
+		  	      clickable: true,
+	              shadow: null,
+	              zIndex: 999,
+	              map: map
+	          });
+	            loc_<%= loc.id %>.setPosition(new google.maps.LatLng(<%= loc.latitude %>, <%= loc.longitude %>));
+			    var infowindow_l_<%= loc.id %> = new google.maps.InfoWindow({content:"<%= @user.public_name %> at <%= loc.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %>"});
+			    google.maps.event.addListener(loc_<%= loc.id %>, 'click', function() {
+			      infowindow_l_<%= loc.id %>.open(map,loc_<%= loc.id %>);
+			    });
+      		<% end %>
+
+      		
+      		<% @checkins.each do |checkin| %>
+		      var checkin_<%= checkin.id %> = new google.maps.Marker({
+	              icon: new google.maps.MarkerImage('/images/icons/spelunking.png',
+                                                              new google.maps.Size(32,37)),
+		  	      clickable: true,
+	              shadow: null,
+	              zIndex: 999,
+	              map: map
+	          });
+	            checkin_<%= checkin.id %>.setPosition(new google.maps.LatLng(<%= checkin.latitude || checkin.checkpoint.latitude %>, <%= checkin.longitude || checkin.checkpoint.latitude %>));
+			    var infowindow_c_<%= checkin.id %> = new google.maps.InfoWindow({content:"<%= @user.public_name %>: <%= checkin.method %> checkin to <%= checkin.checkpoint.name %> at <%= checkin.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%H:%M:%S") %>"});
+			    google.maps.event.addListener(checkin_<%= checkin.id %>, 'click', function() {
+			      infowindow_c_<%= checkin.id %>.open(map,checkin_<%= checkin.id %>);
+			    });
+      		<% end %>
+		<% end %>
+
+        }
+  
+        google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+<% end %>
+<%= form_tag homescreen_path, :method => :get do %>
+<%= submit_tag "Home", :class => "home" %>
+<% end %>
+To share this map with others, use this link: <a href='http://www.survivedc.org/users/<%= @user.share_code %>/history'>http://www.survivedc.org/users/<%= @user.share_code %>/history</a>
+<br /><%= @user.public_name %> checked in at <%= @user.checkpoint_num %> checkpoints during the night.  Here is where they logged in (and a possible path they might have traveled):
+<div id="map_canvas"></div>

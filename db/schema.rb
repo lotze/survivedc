@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120527190043) do
+ActiveRecord::Schema.define(:version => 20120528200015) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id",    :null => false
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(:version => 20120527190043) do
     t.boolean  "bounced",                         :default => false, :null => false
     t.boolean  "donotemail",                      :default => false, :null => false
     t.string   "unsubscribe_token"
+    t.string   "share_code"
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"
@@ -137,6 +138,7 @@ ActiveRecord::Schema.define(:version => 20120527190043) do
   add_index "users", ["is_chaser"], :name => "index_users_on_is_chaser"
   add_index "users", ["remember_me_token"], :name => "index_users_on_remember_me_token"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token"
+  add_index "users", ["share_code"], :name => "index_users_on_share_code", :unique => true
   add_index "users", ["unsubscribe_token"], :name => "index_users_on_unsubscribe_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username"
 

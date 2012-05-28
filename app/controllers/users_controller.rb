@@ -43,10 +43,21 @@ class UsersController < ApplicationController
   end
   
   def status
-    @user = User.find(params[:id] || current_user.id)
+    @user = params[:code] ? User.find_by_share_code(params[:code]) : current_user
+    @user.update_attributes!(:share_code => random_code(10)) unless @user.share_code?
     @place = 1 + User.count({:conditions => "checkpoint_num > #{@user.checkpoint_num} OR (checkpoint_num = #{@user.checkpoint_num} AND last_checkpoint_at < '#{(@user.last_checkpoint_at || @user.created_at).to_s(:db)}')"})
       
     @friends = @user.friends.includes(:checkins).sort_by {|f| f.username}
+  end
+  
+  def history
+    @user = params[:code] ? User.find_by_share_code(params[:code]) : current_user
+    @user.update_attributes!(:share_code => random_code(10)) unless @user.share_code?
+    @location_updates = @user.location_updates#.where("created_at BETWEEN '#{release_time.to_s(:db)}' AND '#{over_time.to_s(:db)}'")
+    @checkins = @user.checkins.includes(:checkpoint)
+    @places = @checkins.map {|c| [c.created_at, c.latitude || c.checkpoint.latitude, c.longitude || c.checkpoint.longitude]}.concat(@location_updates.map {|l| [l.created_at, l.latitude, l.longitude]})
+    puts @places.inspect
+    @places = @places.sort_by {|p| p[0]}
   end
   
   def main

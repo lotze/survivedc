@@ -13,6 +13,8 @@ SurviveDc::Application.routes.draw do
 
   get "users/main", :as => :homescreen
   get "users/status" => "users#status", :as => :status
+  get "users/history" => "users#history", :as => :personal_history
+  get "users/:code/history" => "users#history", :as => :shared_history
   get "rules/index", :as => :rules
   get "feed/index", :as => :feed
   get "map/index", :as => :map
