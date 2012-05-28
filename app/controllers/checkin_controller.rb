@@ -15,11 +15,11 @@ class CheckinController < ApplicationController
           current_user.last_checkpoint_at = Time.now
           current_user.save!
           @checkpoint.update_attributes!(:num_players => @checkpoint.num_players + 1)
-          redirect_to :controller => 'users', :action => 'status', :id => current_user.id
+          redirect_to :controller => 'users', :action => 'current_status', :id => current_user.id
         rescue Exception => e
           # maybe they're just trying to log in again
           if (e.to_s =~ /^Mysql2::Error: Duplicate entry/)
-            redirect_to :controller => 'users', :action => 'status', :id => current_user.id
+            redirect_to :controller => 'users', :action => 'current_status', :id => current_user.id
           else
             redirect_to :controller => "notice", :action => "show", :error => "Error creating checkin...I'm very sorry, but there's probably nothing to be done right now. Keep running."
           end

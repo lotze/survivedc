@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   include ApplicationHelper
-  skip_before_filter :require_login, :only => [:new, :create]
-  
+  skip_before_filter :require_login, :only => [:new, :create, :public_history]
+
   def new
     @user = User.new
     @random_password = random_code(5).downcase
@@ -24,42 +24,52 @@ class UsersController < ApplicationController
       render :new
     end
   end
-  
+
   def authenticate
     @user = User.load_from_activation_token(token)
     @user.activate!
     @user.deliver_reset_password_instructions!
   end
-  
+
   def password_reset
   end
-  
+
   def activate
     @user = User.load_from_activation_token(params[:code])
     @user.activate!
     @place = 1 + User.count({:conditions => "checkpoint_num > #{@user.checkpoint_num} OR (checkpoint_num = #{@user.checkpoint_num} AND last_checkpoint_at < '#{(@user.last_checkpoint_at || @user.created_at).to_s(:db)}')"})
-    render :action => 'status', :notice => 'Successfully activated!'
+    render :action => 'current_status', :notice => 'Successfully activated!'
     @friends = []
   end
-  
-  def status
-    @user = params[:code] ? User.find_by_share_code(params[:code]) : current_user
-    @user.update_attributes!(:share_code => random_code(10)) unless @user.share_code?
+
+  def current_status
+    @user = current_user
     @place = 1 + User.count({:conditions => "checkpoint_num > #{@user.checkpoint_num} OR (checkpoint_num = #{@user.checkpoint_num} AND last_checkpoint_at < '#{(@user.last_checkpoint_at || @user.created_at).to_s(:db)}')"})
-      
+
     @friends = @user.friends.includes(:checkins).sort_by {|f| f.username}
   end
-  
-  def history
-    @user = params[:code] ? User.find_by_share_code(params[:code]) : current_user
+
+  def public_history
+    @user = User.find_by_share_code(params[:code])
     @user.update_attributes!(:share_code => random_code(10)) unless @user.share_code?
     @location_updates = @user.location_updates#.where("created_at BETWEEN '#{release_time.to_s(:db)}' AND '#{over_time.to_s(:db)}'")
     @checkins = @user.checkins.includes(:checkpoint)
     @places = @checkins.map {|c| [c.created_at, c.latitude || c.checkpoint.latitude, c.longitude || c.checkpoint.longitude]}.concat(@location_updates.map {|l| [l.created_at, l.latitude, l.longitude]})
-    puts @places.inspect
     @places = @places.sort_by {|p| p[0]}
   end
-  
+
+  def history
+    @user = current_user
+    if !@user.share_code?
+      @user.share_code = random_code(10)
+      @user.save!
+    end
+    @location_updates = @user.location_updates#.where("created_at BETWEEN '#{release_time.to_s(:db)}' AND '#{over_time.to_s(:db)}'")
+    @checkins = @user.checkins.includes(:checkpoint)
+    @places = @checkins.map {|c| [c.created_at, c.latitude || c.checkpoint.latitude, c.longitude || c.checkpoint.longitude]}.concat(@location_updates.map {|l| [l.created_at, l.latitude, l.longitude]})
+    @places = @places.sort_by {|p| p[0]}
+  end
+
   def main
     if (current_user.onboarding_level)
     end

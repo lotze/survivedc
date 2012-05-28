@@ -12,9 +12,9 @@ SurviveDc::Application.routes.draw do
   get "checkin/new", :as => :manual_checkin
 
   get "users/main", :as => :homescreen
-  get "users/status" => "users#status", :as => :status
+  get "users/status" => "users#current_status", :as => :current_status
   get "users/history" => "users#history", :as => :personal_history
-  get "users/:code/history" => "users#history", :as => :shared_history
+  get "users/history/:code" => "users#public_history", :as => :public_history
   get "rules/index", :as => :rules
   get "feed/index", :as => :feed
   get "map/index", :as => :map
@@ -26,7 +26,8 @@ SurviveDc::Application.routes.draw do
   get "logout" => "sessions#destroy", :as => "logout"
   get "login" => "sessions#new", :as => "login"
   get "signup" => "users#new", :as => "signup"
-  resources :users
+  get "users/new" => "users#new"
+  post "users" => "users#create"
   resources :sessions
   resources :password_resets
   get "activate/:code" => "users#activate", :as => :activation
